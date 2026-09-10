@@ -15,6 +15,11 @@ const DB_FILE = path.join(__dirname, 'db.json');
 
 app.use(cors());
 app.use(express.json());
+app.use(express.static(__dirname));
+
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'index.html'));
+});
 
 // ── Database File Helper Functions ──
 function readDB() {
@@ -127,6 +132,21 @@ app.post('/api/transactions', authenticateToken, (req, res) => {
   db.transactions[req.user.id].unshift(newTxn);
   writeDB(db);
   res.status(201).json(newTxn);
+});
+
+app.put('/api/transactions/:id', authenticateToken, (req, res) => {
+  const id = Number(req.params.id);
+  const { description, amount, type, category, date } = req.body;
+  const db = readDB();
+  const txns = db.transactions[req.user.id] || [];
+  const idx = txns.findIndex(t => t.id === id);
+
+  if (idx !== -1) {
+    txns[idx] = { ...txns[idx], description, amount: Number(amount), type, category, date };
+    writeDB(db);
+    return res.json(txns[idx]);
+  }
+  res.status(404).json({ error: 'Transaction not found' });
 });
 
 app.delete('/api/transactions/:id', authenticateToken, (req, res) => {

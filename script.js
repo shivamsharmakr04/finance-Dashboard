@@ -8,7 +8,7 @@ const API_BASE_URL = 'http://localhost:5000/api';
 const DEFAULT_CATEGORIES = {
   food: { name: "Food & Dining", icon: "🍔", color: "#10b981" },
   transport: { name: "Transport & Travel", icon: "🚗", color: "#06b6d4" },
-  shopping: { name: "Shopping", icon: "8b5cf6" },
+  shopping: { name: "Shopping", icon: "🛍️", color: "#8b5cf6" },
   utilities: { name: "Utilities & Bills", icon: "⚡", color: "#f59e0b" },
   health: { name: "Health & Fitness", icon: "💊", color: "#f43f5e" },
   entertainment: { name: "Entertainment", icon: "🎬", color: "#6366f1" },
@@ -501,6 +501,9 @@ function openTxnModal(id = null) {
 
 function closeModal(modalId) {
   document.getElementById(modalId).classList.remove('active');
+  if (modalId === 'txnModal') {
+    editingTxnId = null;
+  }
 }
 
 async function saveTransaction() {
@@ -516,12 +519,22 @@ async function saveTransaction() {
   }
 
   try {
-    const newTxn = await fetchAPI('/transactions', {
-      method: 'POST',
-      body: JSON.stringify({ description: desc, amount, type, category, date })
-    });
+    if (editingTxnId) {
+      const updatedTxn = await fetchAPI(`/transactions/${editingTxnId}`, {
+        method: 'PUT',
+        body: JSON.stringify({ description: desc, amount, type, category, date })
+      });
+      const idx = transactions.findIndex(t => t.id === editingTxnId);
+      if (idx !== -1) transactions[idx] = updatedTxn;
+      editingTxnId = null;
+    } else {
+      const newTxn = await fetchAPI('/transactions', {
+        method: 'POST',
+        body: JSON.stringify({ description: desc, amount, type, category, date })
+      });
+      transactions.unshift(newTxn);
+    }
 
-    transactions.unshift(newTxn);
     closeModal('txnModal');
     await loadUserData();
     renderAllViews();
@@ -1015,12 +1028,56 @@ function setTrendPeriod(months, btn) {
   initBalanceTrendChart();
 }
 
+function getMonthlySummary(monthsCount = 6) {
+  const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  const now = new Date();
+  const months = [];
+
+  for (let i = monthsCount - 1; i >= 0; i--) {
+    const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+    const prefix = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+    const label = monthNames[d.getMonth()];
+    
+    let income = 0;
+    let expense = 0;
+
+    transactions.forEach(t => {
+      if (t.date && t.date.startsWith(prefix)) {
+        if (t.type === 'income') income += Number(t.amount);
+        if (t.type === 'expense') expense += Number(t.amount);
+      }
+    });
+
+    months.push({ label, income, expense, net: income - expense });
+  }
+
+  const hasData = months.some(m => m.income > 0 || m.expense > 0);
+  if (!hasData && transactions.length > 0) {
+    let inc = 0, exp = 0;
+    transactions.forEach(t => {
+      if (t.type === 'income') inc += Number(t.amount);
+      if (t.type === 'expense') exp += Number(t.amount);
+    });
+    months[months.length - 1].income = inc;
+    months[months.length - 1].expense = exp;
+    months[months.length - 1].net = inc - exp;
+  }
+
+  return months;
+}
+
 function initBalanceTrendChart() {
   const ctx = document.getElementById('balanceTrendChart')?.getContext('2d');
   if (!ctx) return;
 
-  const labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'].slice(0, trendPeriod);
-  const dataPoints = labels.map((_, i) => 45000 + i * 8500 + Math.sin(i) * 4000);
+  const monthlyData = getMonthlySummary(trendPeriod);
+  const labels = monthlyData.map(m => m.label);
+  
+  let runningBalance = 0;
+  const dataPoints = monthlyData.map(m => {
+    runningBalance += m.net;
+    return runningBalance;
+  });
 
   chartInstances.balance = new Chart(ctx, {
     type: 'line',
@@ -1059,16 +1116,17 @@ function initCategoryDonutChart() {
     catSums[t.category] = (catSums[t.category] || 0) + Number(t.amount);
   });
 
-  const labels = Object.keys(catSums).map(k => DEFAULT_CATEGORIES[k]?.name || k);
-  const data = Object.values(catSums);
+  const labels = Object.keys(catSums).length ? Object.keys(catSums).map(k => DEFAULT_CATEGORIES[k]?.name || k) : ['No Expenses'];
+  const data = Object.keys(catSums).length ? Object.values(catSums) : [1];
+  const bgColors = Object.keys(catSums).length ? Object.keys(catSums).map(k => DEFAULT_CATEGORIES[k]?.color || '#64748b') : ['#1e293b'];
 
   chartInstances.donut = new Chart(ctx, {
     type: 'doughnut',
     data: {
       labels,
       datasets: [{
-        data: data.length ? data : [1],
-        backgroundColor: ['#10b981', '#6366f1', '#8b5cf6', '#06b6d4', '#f59e0b', '#f43f5e'],
+        data,
+        backgroundColor: bgColors,
         borderWidth: 0
       }]
     },
@@ -1084,13 +1142,18 @@ function initCashflowBarChart() {
   const ctx = document.getElementById('cashflowBarChart')?.getContext('2d');
   if (!ctx) return;
 
+  const monthlyData = getMonthlySummary(4);
+  const labels = monthlyData.map(m => m.label);
+  const incomeData = monthlyData.map(m => m.income);
+  const expenseData = monthlyData.map(m => m.expense);
+
   chartInstances.cashflow = new Chart(ctx, {
     type: 'bar',
     data: {
-      labels: ['Oct', 'Nov', 'Dec', 'Jan'],
+      labels,
       datasets: [
-        { label: 'Income', data: [105000, 99000, 118000, 109000], backgroundColor: '#10b981', borderRadius: 6 },
-        { label: 'Expense', data: [48000, 52000, 61000, 53000], backgroundColor: '#f43f5e', borderRadius: 6 }
+        { label: 'Income', data: incomeData, backgroundColor: '#10b981', borderRadius: 6 },
+        { label: 'Expense', data: expenseData, backgroundColor: '#f43f5e', borderRadius: 6 }
       ]
     },
     options: {
@@ -1108,12 +1171,16 @@ function initAnalyticsBarChart() {
   const ctx = document.getElementById('analyticsBarChart')?.getContext('2d');
   if (!ctx) return;
 
+  const monthlyData = getMonthlySummary(6);
+  const labels = monthlyData.map(m => m.label);
+  const netData = monthlyData.map(m => m.net);
+
   chartInstances.analytics = new Chart(ctx, {
     type: 'bar',
     data: {
-      labels: ['Q1', 'Q2', 'Q3', 'Q4'],
+      labels,
       datasets: [
-        { label: 'Net Cashflow Growth', data: [120000, 185000, 210000, 260000], backgroundColor: '#6366f1', borderRadius: 8 }
+        { label: 'Net Cashflow Growth', data: netData, backgroundColor: '#6366f1', borderRadius: 8 }
       ]
     },
     options: {
