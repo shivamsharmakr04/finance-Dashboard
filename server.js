@@ -399,6 +399,16 @@ app.post('/api/admin/reset', authenticateToken, requireAdmin, (req, res) => {
   res.json({ success: true, message: 'System factory reset' });
 });
 
-app.listen(PORT, () => {
-  console.log(`🚀 Finova Pro Real-Time Backend API running on http://localhost:${PORT}`);
+const server = app.listen(PORT, () => {
+  console.log(`\n🚀 Finova Pro Real-Time Backend API running on http://localhost:${PORT}\n`);
+});
+
+server.on('error', (err) => {
+  if (err.code === 'EADDRINUSE') {
+    console.error(`\n⚠️ Port ${PORT} is currently in use by another process.`);
+    console.error(`Please stop the process using port ${PORT} or run 'npm start' again after port release.\n`);
+    process.exit(1);
+  } else {
+    console.error('Server error:', err);
+  }
 });
