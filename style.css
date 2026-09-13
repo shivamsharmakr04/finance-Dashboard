@@ -1244,3 +1244,44 @@ body {
     grid-template-columns: 1fr;
   }
 }
+
+/* ── Real-Time Backend Status Pill ── */
+.backend-status-pill {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--surface-input);
+  border: 1px solid var(--border);
+  padding: 6px 14px;
+  border-radius: var(--radius-full);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  transition: var(--transition);
+}
+
+.backend-status-pill.online {
+  border-color: rgba(16, 185, 129, 0.4);
+  background: var(--primary-light);
+  color: var(--primary);
+}
+
+.backend-status-pill.offline {
+  border-color: rgba(244, 63, 94, 0.4);
+  background: var(--rose-light);
+  color: var(--rose);
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: currentColor;
+  box-shadow: 0 0 8px currentColor;
+  animation: statusPulse 2s infinite ease-in-out;
+}
+
+@keyframes statusPulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(1.2); }
+}

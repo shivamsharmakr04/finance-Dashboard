@@ -41,6 +41,15 @@ let editingTxnId = null;
 let trendPeriod = 12;
 let chartInstances = {};
 
+function updateBackendStatusPill(isOnline) {
+  const pill = document.getElementById('backendStatusPill');
+  const txt = document.getElementById('backendStatusText');
+  if (pill && txt) {
+    pill.className = `backend-status-pill ${isOnline ? 'online' : 'offline'}`;
+    txt.textContent = isOnline ? 'Sync Active' : 'Offline';
+  }
+}
+
 // ── Generic API Helper Function ──
 async function fetchAPI(endpoint, options = {}) {
   const headers = { 'Content-Type': 'application/json', ...(options.headers || {}) };
@@ -52,8 +61,10 @@ async function fetchAPI(endpoint, options = {}) {
     const res = await fetch(`${API_BASE_URL}${endpoint}`, { ...options, headers });
     const data = await res.json();
     if (!res.ok) throw new Error(data.error || 'API Request failed');
+    updateBackendStatusPill(true);
     return data;
   } catch (err) {
+    updateBackendStatusPill(false);
     console.warn(`API Error on ${endpoint}:`, err.message);
     throw err;
   }
@@ -87,6 +98,15 @@ async function showApp() {
   initUI();
   await loadUserData();
   renderAllViews();
+
+  if (!window.syncInterval) {
+    window.syncInterval = setInterval(async () => {
+      if (authToken && currentUser) {
+        await loadUserData();
+        renderAllViews();
+      }
+    }, 15000);
+  }
 }
 
 function switchAuthTab(tab) {
@@ -704,11 +724,28 @@ function renderBudgets() {
         </div>
         <div class="goal-meta">
           <span>Spent: ${formatCurrency(spent)}</span>
-          <span>Limit: ${formatCurrency(limit)}</span>
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span>Limit: ${formatCurrency(limit)}</span>
+            <button class="icon-btn" style="width:24px; height:24px; font-size:11px; color:var(--rose);" onclick="deleteBudget('${catKey}')" title="Delete Limit">🗑️</button>
+          </div>
         </div>
       </div>
     `;
   }).join('');
+}
+
+async function deleteBudget(categoryKey) {
+  if (confirm(`Remove budget limit for ${DEFAULT_CATEGORIES[categoryKey]?.name || categoryKey}?`)) {
+    try {
+      const updatedBudgets = await fetchAPI(`/budgets/${categoryKey}`, { method: 'DELETE' });
+      budgets = updatedBudgets;
+      renderBudgets();
+      renderAIAdvisor();
+      showToast('Budget limit removed.', 'success');
+    } catch (err) {
+      showToast(err.message, 'error');
+    }
+  }
 }
 
 function openBudgetModal() {
@@ -1217,14 +1254,28 @@ function initAnalyticsBarChart() {
 }
 
 // ── Preferences & Backup ──
-function saveUserSettings() {
+async function saveUserSettings() {
   const newName = document.getElementById('settingName').value.trim();
-  if (newName && currentUser) {
-    currentUser.name = newName;
-    document.getElementById('sidebarName').textContent = currentUser.name;
-    document.getElementById('greetingHeader').textContent = `Welcome back, ${currentUser.name.split(' ')[0]} ✦`;
+  if (!newName) {
+    showToast('Name cannot be empty.', 'error');
+    return;
+  }
+
+  try {
+    const res = await fetchAPI('/user/profile', {
+      method: 'PUT',
+      body: JSON.stringify({ name: newName })
+    });
+    authToken = res.token;
+    currentUser = res.user;
+    localStorage.setItem('finova_jwt_token', authToken);
     localStorage.setItem('finova_current_user', JSON.stringify(currentUser));
-    showToast('Profile settings saved!', 'success');
+
+    initUI();
+    renderAllViews();
+    showToast('Profile settings saved to real-time server!', 'success');
+  } catch (err) {
+    showToast(err.message, 'error');
   }
 }
 
@@ -1281,11 +1332,16 @@ function importJSONBackup(event) {
       if (data.budgets) budgets = data.budgets;
       if (data.subscriptions) subscriptions = data.subscriptions;
 
+      await fetchAPI('/workspace/restore', {
+        method: 'POST',
+        body: JSON.stringify({ transactions, goals, budgets, subscriptions })
+      });
+
       renderAllViews();
       reinitCharts();
-      showToast('Workspace backup restored!', 'success');
+      showToast('Workspace backup restored to server!', 'success');
     } catch (err) {
-      showToast('Invalid backup file format.', 'error');
+      showToast('Failed restoring backup: ' + err.message, 'error');
     }
   };
   reader.readAsText(file);

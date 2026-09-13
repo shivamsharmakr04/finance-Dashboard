@@ -34,64 +34,7 @@
     }
   ],
   "transactions": {
-    "u1": [
-      {
-        "id": 1,
-        "description": "Monthly Salary",
-        "category": "salary",
-        "type": "income",
-        "amount": 85000,
-        "date": "2025-01-31"
-      },
-      {
-        "id": 2,
-        "description": "Grocery Supermarket",
-        "category": "food",
-        "type": "expense",
-        "amount": 3400,
-        "date": "2025-01-28"
-      },
-      {
-        "id": 3,
-        "description": "Netflix 4K Ultra",
-        "category": "entertainment",
-        "type": "expense",
-        "amount": 649,
-        "date": "2025-01-27"
-      },
-      {
-        "id": 4,
-        "description": "Electricity & Utility Bill",
-        "category": "utilities",
-        "type": "expense",
-        "amount": 1850,
-        "date": "2025-01-25"
-      },
-      {
-        "id": 5,
-        "description": "Freelance UI Design Project",
-        "category": "freelance",
-        "type": "income",
-        "amount": 24000,
-        "date": "2025-01-22"
-      },
-      {
-        "id": 6,
-        "description": "Uber Rides",
-        "category": "transport",
-        "type": "expense",
-        "amount": 1240,
-        "date": "2025-01-20"
-      },
-      {
-        "id": 7,
-        "description": "Gourmet Dinner Party",
-        "category": "food",
-        "type": "expense",
-        "amount": 2800,
-        "date": "2025-01-18"
-      }
-    ],
+    "u1": [],
     "u2": [
       {
         "id": 101,
@@ -118,16 +61,7 @@
         "date": "2025-01-24"
       }
     ],
-    "u3": [
-      {
-        "id": 1,
-        "description": "Enterprise Consulting Fee",
-        "amount": 50000,
-        "type": "income",
-        "category": "food",
-        "date": "2026-09-05"
-      }
-    ],
+    "u3": [],
     "u_1789316748200": [],
     "u_1789316804427": [],
     "u_1789317060579": [
@@ -142,22 +76,7 @@
     ]
   },
   "goals": {
-    "u1": [
-      {
-        "id": 1,
-        "title": "Emergency Vault",
-        "target": 100000,
-        "current": 65000,
-        "icon": "🛡️"
-      },
-      {
-        "id": 2,
-        "title": "Tech Gear Upgrade",
-        "target": 50000,
-        "current": 28000,
-        "icon": "💻"
-      }
-    ],
+    "u1": [],
     "u2": [
       {
         "id": 101,
@@ -174,10 +93,7 @@
   "budgets": {
     "u1": {
       "food": 12000,
-      "shopping": 10000,
-      "transport": 6000,
-      "utilities": 5000,
-      "entertainment": 4000
+      "shopping": 10000
     },
     "u2": {
       "food": 15000,
@@ -209,22 +125,7 @@
     }
   },
   "subscriptions": {
-    "u1": [
-      {
-        "id": 1,
-        "name": "Netflix 4K Premium",
-        "cost": 649,
-        "day": 15,
-        "active": true
-      },
-      {
-        "id": 2,
-        "name": "Spotify Family Plan",
-        "cost": 179,
-        "day": 10,
-        "active": true
-      }
-    ],
+    "u1": [],
     "u2": [
       {
         "id": 101,

@@ -124,6 +124,39 @@ app.get('/api/auth/me', authenticateToken, (req, res) => {
   res.json({ user: req.user });
 });
 
+// Update User Profile
+app.put('/api/user/profile', authenticateToken, (req, res) => {
+  const { name } = req.body;
+  if (!name) return res.status(400).json({ error: 'Name is required' });
+
+  const db = readDB();
+  const user = db.users.find(u => u.id === req.user.id);
+  if (!user) return res.status(404).json({ error: 'User not found' });
+
+  user.name = name.trim();
+  user.avatar = user.name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2) || 'US';
+  writeDB(db);
+
+  const updatedUserSafe = { id: user.id, name: user.name, email: user.email, role: user.role, avatar: user.avatar };
+  const token = jwt.sign(updatedUserSafe, JWT_SECRET, { expiresIn: '7d' });
+  res.json({ token, user: updatedUserSafe });
+});
+
+// Full Workspace Restore from Backup
+app.post('/api/workspace/restore', authenticateToken, (req, res) => {
+  const { transactions, goals, budgets, subscriptions } = req.body;
+  const db = readDB();
+  const uId = req.user.id;
+
+  if (Array.isArray(transactions)) db.transactions[uId] = transactions;
+  if (Array.isArray(goals)) db.goals[uId] = goals;
+  if (budgets && typeof budgets === 'object') db.budgets[uId] = budgets;
+  if (Array.isArray(subscriptions)) db.subscriptions[uId] = subscriptions;
+
+  writeDB(db);
+  res.json({ success: true, message: 'Workspace restored successfully' });
+});
+
 // ── Workspace CRUD Endpoints ──
 
 // Transactions
@@ -235,6 +268,16 @@ app.post('/api/budgets', authenticateToken, (req, res) => {
   db.budgets[req.user.id][category] = Number(limit);
   writeDB(db);
   res.json(db.budgets[req.user.id]);
+});
+
+app.delete('/api/budgets/:category', authenticateToken, (req, res) => {
+  const category = req.params.category;
+  const db = readDB();
+  if (db.budgets[req.user.id] && db.budgets[req.user.id][category]) {
+    delete db.budgets[req.user.id][category];
+    writeDB(db);
+  }
+  res.json(db.budgets[req.user.id] || {});
 });
 
 // Subscriptions
