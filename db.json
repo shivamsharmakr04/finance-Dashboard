@@ -5,21 +5,32 @@
       "name": "Alex Kumar",
       "email": "alex@finova.io",
       "role": "user",
-      "avatar": "AK"
+      "avatar": "AK",
+      "password": "$2a$10$nMOJuWEwOlPWN11rsdWlqeBW6s/yV5bvKwSK0YHgfDQv3J0.vP7jy"
     },
     {
       "id": "u2",
       "name": "Sarah Chen",
       "email": "sarah@finova.io",
       "role": "user",
-      "avatar": "SC"
+      "avatar": "SC",
+      "password": "$2a$10$nMOJuWEwOlPWN11rsdWlqeBW6s/yV5bvKwSK0YHgfDQv3J0.vP7jy"
     },
     {
       "id": "u3",
       "name": "Admin Master",
       "email": "admin@finova.io",
       "role": "admin",
-      "avatar": "AD"
+      "avatar": "AD",
+      "password": "$2a$10$nMOJuWEwOlPWN11rsdWlqeBW6s/yV5bvKwSK0YHgfDQv3J0.vP7jy"
+    },
+    {
+      "id": "u_1789317060579",
+      "name": "Test",
+      "email": "test@gmail.com",
+      "role": "user",
+      "avatar": "T",
+      "password": "$2a$10$g3//DDJ.RduPmKQ1OoP.Y.bIE5r9dfHDnwcLvACvOJ45xZHzLOi9y"
     }
   ],
   "transactions": {
@@ -116,6 +127,18 @@
         "category": "food",
         "date": "2026-09-05"
       }
+    ],
+    "u_1789316748200": [],
+    "u_1789316804427": [],
+    "u_1789317060579": [
+      {
+        "id": 1,
+        "description": "Daily Expense",
+        "amount": 10000,
+        "type": "expense",
+        "category": "food",
+        "date": "2026-09-13"
+      }
     ]
   },
   "goals": {
@@ -143,7 +166,10 @@
         "current": 140000,
         "icon": "✈️"
       }
-    ]
+    ],
+    "u_1789316748200": [],
+    "u_1789316804427": [],
+    "u_1789317060579": []
   },
   "budgets": {
     "u1": {
@@ -159,6 +185,27 @@
       "transport": 10000,
       "utilities": 8000,
       "entertainment": 5000
+    },
+    "u_1789316748200": {
+      "food": 12000,
+      "shopping": 10000,
+      "transport": 6000,
+      "utilities": 5000,
+      "entertainment": 4000
+    },
+    "u_1789316804427": {
+      "food": 12000,
+      "shopping": 10000,
+      "transport": 6000,
+      "utilities": 5000,
+      "entertainment": 4000
+    },
+    "u_1789317060579": {
+      "food": 12000,
+      "shopping": 10000,
+      "transport": 6000,
+      "utilities": 5000,
+      "entertainment": 4000
     }
   },
   "subscriptions": {
@@ -184,6 +231,17 @@
         "name": "Adobe Creative Cloud",
         "cost": 4200,
         "day": 5,
+        "active": true
+      }
+    ],
+    "u_1789316748200": [],
+    "u_1789316804427": [],
+    "u_1789317060579": [
+      {
+        "id": 1789317126009,
+        "name": "Gym",
+        "cost": 1500,
+        "day": 30,
         "active": true
       }
     ]

@@ -100,11 +100,17 @@ function switchAuthTab(tab) {
 async function handleLogin(event) {
   event.preventDefault();
   const email = document.getElementById('loginEmail').value.trim().toLowerCase();
+  const password = document.getElementById('loginPass').value;
+
+  if (!email || !password) {
+    showToast('Please enter both email and password', 'error');
+    return;
+  }
 
   try {
     const res = await fetchAPI('/auth/login', {
       method: 'POST',
-      body: JSON.stringify({ email })
+      body: JSON.stringify({ email, password })
     });
 
     authToken = res.token;
@@ -124,11 +130,22 @@ async function handleRegister(event) {
   const name = document.getElementById('regName').value.trim();
   const email = document.getElementById('regEmail').value.trim().toLowerCase();
   const role = document.getElementById('regRole').value;
+  const password = document.getElementById('regPass').value;
+
+  if (!name || !email || !password) {
+    showToast('Please complete all required fields', 'error');
+    return;
+  }
+
+  if (password.length < 6) {
+    showToast('Password must be at least 6 characters long', 'error');
+    return;
+  }
 
   try {
     const res = await fetchAPI('/auth/register', {
       method: 'POST',
-      body: JSON.stringify({ name, email, role })
+      body: JSON.stringify({ name, email, role, password })
     });
 
     authToken = res.token;
@@ -150,12 +167,16 @@ async function demoLogin(userId) {
     'u3': 'admin@finova.io'
   };
   const email = emails[userId];
+  const defaultPassword = 'password123';
+
   if (email) {
     document.getElementById('loginEmail').value = email;
+    document.getElementById('loginPass').value = defaultPassword;
+
     try {
       const res = await fetchAPI('/auth/login', {
         method: 'POST',
-        body: JSON.stringify({ email })
+        body: JSON.stringify({ email, password: defaultPassword })
       });
       authToken = res.token;
       currentUser = res.user;

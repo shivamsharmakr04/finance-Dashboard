@@ -7,6 +7,7 @@ const cors = require('cors');
 const fs = require('fs');
 const path = require('path');
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -66,20 +67,24 @@ function requireAdmin(req, res, next) {
 
 // Register
 app.post('/api/auth/register', (req, res) => {
-  const { name, email, role } = req.body;
-  if (!name || !email) return res.status(400).json({ error: 'Name and email required' });
+  const { name, email, role, password } = req.body;
+  if (!name || !email || !password) return res.status(400).json({ error: 'Name, email, and password required' });
+  if (password.length < 6) return res.status(400).json({ error: 'Password must be at least 6 characters' });
 
   const db = readDB();
   const existing = db.users.find(u => u.email.toLowerCase() === email.toLowerCase());
   if (existing) return res.status(400).json({ error: 'Email already registered' });
 
   const initials = name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2) || 'US';
+  const hashedPassword = bcrypt.hashSync(password, 10);
+
   const newUser = {
     id: `u_${Date.now()}`,
     name,
     email,
     role: role || 'user',
-    avatar: initials
+    avatar: initials,
+    password: hashedPassword
   };
 
   db.users.push(newUser);
@@ -89,20 +94,29 @@ app.post('/api/auth/register', (req, res) => {
   db.subscriptions[newUser.id] = [];
   writeDB(db);
 
-  const token = jwt.sign({ id: newUser.id, name: newUser.name, email: newUser.email, role: newUser.role, avatar: newUser.avatar }, JWT_SECRET, { expiresIn: '7d' });
-  res.json({ token, user: newUser });
+  const userSafe = { id: newUser.id, name: newUser.name, email: newUser.email, role: newUser.role, avatar: newUser.avatar };
+  const token = jwt.sign(userSafe, JWT_SECRET, { expiresIn: '7d' });
+  res.json({ token, user: userSafe });
 });
 
 // Login
 app.post('/api/auth/login', (req, res) => {
-  const { email } = req.body;
+  const { email, password } = req.body;
+  if (!email || !password) return res.status(400).json({ error: 'Email and password required' });
+
   const db = readDB();
   const user = db.users.find(u => u.email.toLowerCase() === email.toLowerCase());
 
-  if (!user) return res.status(404).json({ error: 'Account not found' });
+  if (!user) return res.status(401).json({ error: 'Invalid email or password' });
 
-  const token = jwt.sign({ id: user.id, name: user.name, email: user.email, role: user.role, avatar: user.avatar }, JWT_SECRET, { expiresIn: '7d' });
-  res.json({ token, user });
+  if (user.password) {
+    const isMatch = bcrypt.compareSync(password, user.password);
+    if (!isMatch) return res.status(401).json({ error: 'Invalid email or password' });
+  }
+
+  const userSafe = { id: user.id, name: user.name, email: user.email, role: user.role, avatar: user.avatar };
+  const token = jwt.sign(userSafe, JWT_SECRET, { expiresIn: '7d' });
+  res.json({ token, user: userSafe });
 });
 
 // Get Current Auth User
@@ -384,11 +398,12 @@ app.delete('/api/admin/users/:id', authenticateToken, requireAdmin, (req, res) =
 });
 
 app.post('/api/admin/reset', authenticateToken, requireAdmin, (req, res) => {
+  const defaultPasswordHash = '$2a$10$nMOJuWEwOlPWN11rsdWlqeBW6s/yV5bvKwSK0YHgfDQv3J0.vP7jy'; // password123
   const defaultDB = {
     users: [
-      { id: "u1", name: "Alex Kumar", email: "alex@finova.io", role: "user", avatar: "AK" },
-      { id: "u2", name: "Sarah Chen", email: "sarah@finova.io", role: "user", avatar: "SC" },
-      { id: "u3", name: "Admin Master", email: "admin@finova.io", role: "admin", avatar: "AD" }
+      { id: "u1", name: "Alex Kumar", email: "alex@finova.io", role: "user", avatar: "AK", password: defaultPasswordHash },
+      { id: "u2", name: "Sarah Chen", email: "sarah@finova.io", role: "user", avatar: "SC", password: defaultPasswordHash },
+      { id: "u3", name: "Admin Master", email: "admin@finova.io", role: "admin", avatar: "AD", password: defaultPasswordHash }
     ],
     transactions: { u1: [], u2: [], u3: [] },
     goals: { u1: [], u2: [] },
