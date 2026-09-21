@@ -1,98 +1,79 @@
-# 💎 Finova Pro — Full-Stack Personal Finance Platform & AI Engine
+# Finova Pro — Personal Finance Dashboard
 
-[![Node.js](https://img.shields.io/badge/Node.js-v18%2B-10b981?style=flat-square&logo=node.js)](https://nodejs.org)
-[![Express.js](https://img.shields.io/badge/Express-4.19-06b6d4?style=flat-square&logo=express)](https://expressjs.com)
-[![JWT Auth](https://img.shields.io/badge/Authentication-JWT%20%2B%20bcryptjs-6366f1?style=flat-square)](https://jwt.io)
-[![License](https://img.shields.io/badge/License-MIT-f59e0b?style=flat-square)](LICENSE)
+A full-stack personal finance platform built with Node.js and Express. Finova Pro provides authentication, transaction management, budgets, savings goals, subscriptions, analytics, exports, and financial forecasting.
 
-**Finova Pro** is a full-stack, real-time Personal Finance Dashboard & AI Analytics Platform built with a Node.js Express REST API backend, secure `bcryptjs` password hashing, JWT authentication, persistent JSON database storage, time-series AI cashflow forecasting, and a modern Cyber-Emerald Web UI with live multi-tab synchronization.
+## ✨ Highlights
 
----
+- 🔐 JWT authentication with bcrypt password hashing
+- 💳 Income and expense transaction management
+- 🎯 Savings goals and progress tracking
+- 📊 Budget and spending analytics
+- 🔁 Subscription tracking
+- 🤖 Cash-flow forecasting and financial health insights
+- 📤 CSV export and JSON backup/restore
+- 🌐 Multi-currency support
+- 🔄 Background synchronization between open tabs
+- 👤 User and admin workflows
 
-## 🌟 Key Features & Capabilities
+## 🧰 Tech Stack
 
-### 🔐 1. Real-Time Security & Authorization
-- **`bcryptjs` Password Hashing**: Passwords are encrypted with 10 salt rounds before persisting to backend storage.
-- **JWT Authentication & Sessions**: Secure 7-day signed JSON Web Tokens passed in `Authorization: Bearer <token>` headers.
-- **Role-Based Access Control (RBAC)**: Enforced via `authenticateToken` and `requireAdmin` middlewares for **Standard User** and **Master Admin** roles.
+**Backend:** Node.js, Express.js, REST APIs  
+**Authentication:** JWT, bcryptjs  
+**Frontend:** HTML, CSS, JavaScript, Chart.js  
+**Storage:** JSON-based persistent data store  
+**Tools:** Git, GitHub
 
-### ⚡ 2. Real-Time Node.js Express Backend (`server.js`)
-- **Authentication Endpoints**:
-  - `POST /api/auth/register` — Account registration with password hashing & automatic data initialization.
-  - `POST /api/auth/login` — Secure credential verification & JWT token issuance.
-  - `GET /api/auth/me` — Real-time JWT token verification.
-- **Profile & Workspace Endpoints**:
-  - `PUT /api/user/profile` — Live profile name and avatar updates.
-  - `POST /api/workspace/restore` — Full workspace JSON backup restoration.
-- **Financial Workspace Endpoints**:
-  - `/api/transactions` — Income & expense CRUD operations with pagination & filtering.
-  - `/api/goals` — Savings goal creation, target progress, and live deposit logging.
-  - `/api/budgets` — Category spending limits and deletion endpoints.
-  - `/api/subscriptions` — Recurring billing & renewal day tracking.
-- **🤖 Real-Time AI Predictions API (`/api/predictions`)**:
-  - Time-series exponential spending velocity forecasting next month expenses.
-  - Dynamic Financial Health Score (0–100) and actionable AI risk advisor alerts.
-- **⚡ Master Admin API (`/api/admin`)**:
-  - Global volume stats, transaction aggregation, user demotion/promotion, user deletion, and factory reset.
+## 🏗️ Architecture
 
-### 🎨 3. Cyber-Emerald Web Interface
-- **Real-Time Backend Status Pill**: Glowing `● Sync Active` status pill in navbar displaying live Express backend connection health.
-- **Background Auto-Sync Loop**: Automated 15-second background polling keeping open tabs synchronized.
-- **Brand SVG Assets**: Custom vector emblem (`favicon.svg`) integrated for browser tab icons and header badges.
-- **Interactive Chart.js Suite**: Dynamic balance trend line chart (3M/6M/12M), category expense doughnut chart, and cashflow bar charts.
-- **Preferences & Export**: Multi-currency switcher (₹ INR, $ USD, € EUR, £ GBP), dark/light themes, CSV exporter, and full JSON backup/restore.
+```text
+Browser UI
+   │
+   ▼
+REST API (Express)
+   │
+   ├── Authentication
+   ├── Transactions
+   ├── Budgets
+   ├── Goals
+   ├── Subscriptions
+   └── Predictions
+   │
+   ▼
+Persistent Data Store
+```
 
----
+## 🚀 Getting Started
 
-## ⚡ Quick Start Guide
+### Prerequisites
 
-### 1. Prerequisites
-- **Node.js** (v14.0 or higher) installed on your system.
+- Node.js 18+
+- npm
 
-### 2. Installation & Server Setup
+### Installation
+
 ```bash
-# Clone the repository
 git clone https://github.com/shivamsharmakr04/finance-Dashboard.git
 cd finance-Dashboard
-
-# Install backend dependencies (express, cors, jsonwebtoken, bcryptjs)
 npm install
-
-# Start the Real-Time Express Server (Runs on http://localhost:5000)
 npm start
 ```
 
-### 3. Open the Application
-Open `index.html` directly in your web browser or use a local development server (e.g. Live Server).
+The API starts on the configured local port. Open `index.html` through a local development server.
+
+## 📌 What This Project Demonstrates
+
+- REST API design
+- Authentication and authorization
+- Financial CRUD workflows
+- Data visualization
+- Forecasting logic
+- Export/backup workflows
+- Frontend/backend integration
+
+## 👨‍💻 Author
+
+**Shivam Kumar** — Full-Stack Developer
+
+[GitHub](https://github.com/shivamsharmakr04) · [LinkedIn](https://linkedin.com/in/shivam-kumar-b0aab2209)
 
 ---
-
-## 🔑 Demo Accounts
-
-You can log in instantly using the built-in quick demo buttons or credentials below (default password for all demo accounts is `password123`):
-
-| Role | Name | Email | Default Password |
-| :--- | :--- | :--- | :--- |
-| **Standard User** | Alex Kumar | `alex@finova.io` | `password123` |
-| **Standard User** | Sarah Chen | `sarah@finova.io` | `password123` |
-| **Master Admin** | Admin Master | `admin@finova.io` | `password123` |
-
----
-
-## 📂 Project Structure
-
-```
-finance-Dashboard/
-├── server.js          # Real-time Express REST API, JWT auth, & AI prediction engine
-├── db.json            # Persistent JSON database store
-├── script.js          # Frontend API client, real-time sync, & Chart.js renderer
-├── index.html         # Single-page application markup & modals
-├── style.css          # Cyber-Emerald design system, animations, & themes
-├── favicon.svg        # Custom brand vector logo & favicon asset
-├── package.json       # Project dependencies & startup scripts
-└── README.md          # Project documentation
-```
-
----
-
-Made with ❤️ for real-time financial empowerment.
