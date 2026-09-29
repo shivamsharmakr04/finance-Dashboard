@@ -458,20 +458,21 @@ app.post('/api/admin/reset', authenticateToken, requireAdmin, (req, res) => {
 
 // Create HTTP & WebSocket Server
 const server = http.createServer(app);
-initRealtimeServer(server);
-
-server.listen(PORT, () => {
-  console.log(`\n🚀 Finova Pro Real-Time Backend API & WebSocket Engine running on http://localhost:${PORT}\n`);
-});
 
 server.on('error', (err) => {
   if (err.code === 'EADDRINUSE') {
-    console.error(`\n⚠️ Port ${PORT} is currently in use by another process.`);
-    console.error(`Please stop the process using port ${PORT} or run 'npm start' again.\n`);
+    console.error(`\n⚠️  Port ${PORT} is currently in use by another process.`);
+    console.error(`👉 Close the process running on port ${PORT} or check running Node tasks, then run 'npm start' again.\n`);
     process.exit(1);
   } else {
     console.error('Server error:', err);
   }
+});
+
+initRealtimeServer(server);
+
+server.listen(PORT, () => {
+  console.log(`\n🚀 Finova Pro Real-Time Backend API & WebSocket Engine running on http://localhost:${PORT}\n`);
 });
 
 module.exports = { app, server };

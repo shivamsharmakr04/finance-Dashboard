@@ -10,6 +10,12 @@ const clients = new Set();
 function initRealtimeServer(server) {
   wss = new WebSocket.Server({ server, path: '/ws' });
 
+  wss.on('error', (err) => {
+    if (err.code !== 'EADDRINUSE') {
+      console.error('WebSocket Server error:', err.message);
+    }
+  });
+
   wss.on('connection', (ws, req) => {
     ws.isAlive = true;
     ws.userId = null;
