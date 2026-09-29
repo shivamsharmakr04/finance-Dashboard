@@ -2,7 +2,9 @@
    FINOVA PRO - FRONTEND API CLIENT & REAL-TIME INTEGRATION ENGINE
    ═════════════════════════════════════════════════════════════════════ */
 
-const API_BASE_URL = 'http://localhost:5000/api';
+const API_BASE_URL = (window.location.protocol === 'http:' || window.location.protocol === 'https:')
+  ? `${window.location.origin}/api`
+  : 'http://localhost:5000/api';
 
 // Default Fallback Categories
 const DEFAULT_CATEGORIES = {
@@ -66,6 +68,11 @@ async function fetchAPI(endpoint, options = {}) {
   } catch (err) {
     updateBackendStatusPill(false);
     console.warn(`API Error on ${endpoint}:`, err.message);
+    if (window.location.protocol === 'file:') {
+      throw new Error(`Server unreachable (${API_BASE_URL}). Opening via file:// limits origins. Please run 'npm start' and open http://localhost:5000`);
+    } else if (err.message.includes('Failed to fetch') || err.name === 'TypeError') {
+      throw new Error(`Cannot connect to backend server (${API_BASE_URL}). Please ensure the server is running ('npm start').`);
+    }
     throw err;
   }
 }
@@ -73,6 +80,12 @@ async function fetchAPI(endpoint, options = {}) {
 // ── Master Initialization ──
 document.addEventListener('DOMContentLoaded', async () => {
   applyTheme(theme);
+  
+  if (window.location.protocol === 'file:') {
+    setTimeout(() => {
+      showToast('⚠️ Running via file:// protocol. Start server with "npm start" & open http://localhost:5000', 'warning', 8000);
+    }, 500);
+  }
   
   if (authToken && currentUser) {
     try {
