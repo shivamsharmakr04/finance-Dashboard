@@ -43,12 +43,85 @@ let editingTxnId = null;
 let trendPeriod = 12;
 let chartInstances = {};
 
-function updateBackendStatusPill(isOnline) {
+function updateBackendStatusPill(isOnline, statusMsg = null) {
   const pill = document.getElementById('backendStatusPill');
   const txt = document.getElementById('backendStatusText');
   if (pill && txt) {
     pill.className = `backend-status-pill ${isOnline ? 'online' : 'offline'}`;
-    txt.textContent = isOnline ? 'Sync Active' : 'Offline';
+    txt.textContent = statusMsg || (isOnline ? 'Sync Active' : 'Offline');
+  }
+}
+
+// ── ⚡ Real-Time WebSocket Client Sync Engine ──
+let socketClient = null;
+let socketPingTimer = null;
+
+function initRealtimeClient() {
+  if (window.location.protocol === 'file:') return;
+
+  if (socketClient) {
+    try { socketClient.close(); } catch (e) {}
+  }
+
+  const wsProtocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+  const wsHost = (window.location.protocol === 'http:' || window.location.protocol === 'https:')
+    ? window.location.host
+    : 'localhost:5000';
+
+  const wsUrl = `${wsProtocol}//${wsHost}/ws`;
+
+  try {
+    socketClient = new WebSocket(wsUrl);
+
+    socketClient.onopen = () => {
+      updateBackendStatusPill(true, 'Live Sync Active (WS)');
+      if (currentUser && currentUser.id) {
+        socketClient.send(JSON.stringify({ type: 'AUTH', userId: currentUser.id }));
+      }
+      
+      if (socketPingTimer) clearInterval(socketPingTimer);
+      socketPingTimer = setInterval(() => {
+        if (socketClient && socketClient.readyState === WebSocket.OPEN) {
+          socketClient.send(JSON.stringify({ type: 'PING' }));
+        }
+      }, 25000);
+    };
+
+    socketClient.onmessage = async (event) => {
+      try {
+        const payload = JSON.parse(event.data);
+        if (payload.type === 'DATA_UPDATED' || payload.type === 'WORKSPACE_SYNC') {
+          showToast('⚡ Real-time update synced', 'info', 2000);
+          await loadUserData();
+          renderAllViews();
+        } else if (payload.type === 'PROFILE_UPDATED') {
+          if (payload.data && currentUser) {
+            currentUser = { ...currentUser, ...payload.data };
+            localStorage.setItem('finova_current_user', JSON.stringify(currentUser));
+            initUI();
+          }
+        } else if (payload.type === 'SYSTEM_RESET') {
+          showToast('⚠️ System reset by administrator', 'warning', 4000);
+          handleLogout();
+        }
+      } catch (err) {
+        console.error('WebSocket message parsing error:', err);
+      }
+    };
+
+    socketClient.onclose = () => {
+      updateBackendStatusPill(false, 'Offline (Reconnecting...)');
+      if (socketPingTimer) clearInterval(socketPingTimer);
+      setTimeout(() => {
+        if (authToken && currentUser) initRealtimeClient();
+      }, 5000);
+    };
+
+    socketClient.onerror = () => {
+      updateBackendStatusPill(false, 'Sync Offline');
+    };
+  } catch (e) {
+    console.warn('Real-time WebSocket init skipped:', e);
   }
 }
 
@@ -63,10 +136,10 @@ async function fetchAPI(endpoint, options = {}) {
     const res = await fetch(`${API_BASE_URL}${endpoint}`, { ...options, headers });
     const data = await res.json();
     if (!res.ok) throw new Error(data.error || 'API Request failed');
-    updateBackendStatusPill(true);
+    updateBackendStatusPill(true, 'Sync Active');
     return data;
   } catch (err) {
-    updateBackendStatusPill(false);
+    updateBackendStatusPill(false, 'Sync Offline');
     console.warn(`API Error on ${endpoint}:`, err.message);
     if (window.location.protocol === 'file:') {
       throw new Error(`Server unreachable (${API_BASE_URL}). Opening via file:// limits origins. Please run 'npm start' and open http://localhost:5000`);
@@ -111,6 +184,7 @@ async function showApp() {
   initUI();
   await loadUserData();
   renderAllViews();
+  initRealtimeClient();
 
   if (!window.syncInterval) {
     window.syncInterval = setInterval(async () => {
