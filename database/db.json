@@ -6,7 +6,7 @@
       "email": "alex@finova.io",
       "role": "user",
       "avatar": "AK",
-      "password": "$2a$10$nMOJuWEwOlPWN11rsdWlqeBW6s/yV5bvKwSK0YHgfDQv3J0.vP7jy"
+      "password": "/yV5bvKwSK0YHgfDQv3J0.vP7jy"
     },
     {
       "id": "u2",
@@ -14,7 +14,7 @@
       "email": "sarah@finova.io",
       "role": "user",
       "avatar": "SC",
-      "password": "$2a$10$nMOJuWEwOlPWN11rsdWlqeBW6s/yV5bvKwSK0YHgfDQv3J0.vP7jy"
+      "password": "/yV5bvKwSK0YHgfDQv3J0.vP7jy"
     },
     {
       "id": "u3",
@@ -22,138 +22,153 @@
       "email": "admin@finova.io",
       "role": "admin",
       "avatar": "AD",
-      "password": "$2a$10$nMOJuWEwOlPWN11rsdWlqeBW6s/yV5bvKwSK0YHgfDQv3J0.vP7jy"
-    },
-    {
-      "id": "u_1789317060579",
-      "name": "Test",
-      "email": "test@gmail.com",
-      "role": "user",
-      "avatar": "T",
-      "password": "$2a$10$g3//DDJ.RduPmKQ1OoP.Y.bIE5r9dfHDnwcLvACvOJ45xZHzLOi9y"
+      "password": "/yV5bvKwSK0YHgfDQv3J0.vP7jy"
     }
   ],
   "transactions": {
     "u1": [
       {
         "id": 1,
-        "description": "Realtime Test Transaction",
-        "amount": 5000,
+        "description": "Freelance Design Retainer",
+        "amount": 45000,
         "type": "income",
         "category": "freelance",
-        "date": "2026-09-29"
+        "date": "2026-09-02"
+      },
+      {
+        "id": 2,
+        "description": "Gourmet Dinner & Drinks",
+        "amount": 3200,
+        "type": "expense",
+        "category": "food",
+        "date": "2026-09-05"
+      },
+      {
+        "id": 3,
+        "description": "Cloud Infrastructure Bill",
+        "amount": 4800,
+        "type": "expense",
+        "category": "utilities",
+        "date": "2026-09-08"
+      },
+      {
+        "id": 4,
+        "description": "Tech Gadgets & Electronics",
+        "amount": 8500,
+        "type": "expense",
+        "category": "shopping",
+        "date": "2026-09-12"
+      },
+      {
+        "id": 5,
+        "description": "Monthly Tech Salary Deposit",
+        "amount": 125000,
+        "type": "income",
+        "category": "salary",
+        "date": "2026-09-15"
       }
     ],
     "u2": [
       {
-        "id": 101,
-        "description": "Client Consultancy Fee",
-        "category": "freelance",
-        "type": "income",
-        "amount": 120000,
-        "date": "2025-01-30"
-      },
-      {
-        "id": 102,
-        "description": "International Flight",
-        "category": "transport",
-        "type": "expense",
-        "amount": 38000,
-        "date": "2025-01-26"
-      },
-      {
-        "id": 103,
-        "description": "Boutique Hotel Stay",
-        "category": "shopping",
-        "type": "expense",
-        "amount": 14500,
-        "date": "2025-01-24"
-      }
-    ],
-    "u3": [],
-    "u_1789316748200": [],
-    "u_1789316804427": [],
-    "u_1789317060579": [
-      {
         "id": 1,
-        "description": "Daily Expense",
-        "amount": 10000,
+        "description": "Consulting Honorarium",
+        "amount": 35000,
+        "type": "income",
+        "category": "freelance",
+        "date": "2026-09-04"
+      },
+      {
+        "id": 2,
+        "description": "Organic Grocery Supplies",
+        "amount": 4200,
         "type": "expense",
         "category": "food",
         "date": "2026-09-13"
       }
-    ]
+    ],
+    "u3": []
   },
   "goals": {
-    "u1": [],
-    "u2": [
+    "u1": [
       {
         "id": 101,
-        "title": "World Tour Fund",
-        "target": 250000,
-        "current": 140000,
+        "title": "Emergency Reserve Vault",
+        "target": 200000,
+        "current": 145000,
+        "icon": "🛡️"
+      },
+      {
+        "id": 102,
+        "title": "Japan Autumn Trip Fund",
+        "target": 150000,
+        "current": 85000,
         "icon": "✈️"
       }
     ],
-    "u_1789316748200": [],
-    "u_1789316804427": [],
-    "u_1789317060579": []
+    "u2": [
+      {
+        "id": 201,
+        "title": "New Electric Vehicle Fund",
+        "target": 500000,
+        "current": 220000,
+        "icon": "🚗"
+      }
+    ],
+    "u3": []
   },
   "budgets": {
     "u1": {
-      "food": 12000,
-      "shopping": 10000
-    },
-    "u2": {
       "food": 15000,
-      "shopping": 20000,
-      "transport": 10000,
+      "shopping": 12000,
       "utilities": 8000,
+      "transport": 6000,
       "entertainment": 5000
     },
-    "u_1789316748200": {
-      "food": 12000,
-      "shopping": 10000,
-      "transport": 6000,
-      "utilities": 5000,
-      "entertainment": 4000
-    },
-    "u_1789316804427": {
-      "food": 12000,
-      "shopping": 10000,
-      "transport": 6000,
-      "utilities": 5000,
-      "entertainment": 4000
-    },
-    "u_1789317060579": {
-      "food": 12000,
-      "shopping": 10000,
-      "transport": 6000,
-      "utilities": 5000,
-      "entertainment": 4000
+    "u2": {
+      "food": 18000,
+      "shopping": 15000
     }
   },
   "subscriptions": {
-    "u1": [],
-    "u2": [
+    "u1": [
       {
-        "id": 101,
-        "name": "Adobe Creative Cloud",
-        "cost": 4200,
+        "id": 1,
+        "name": "Netflix Premium 4K",
+        "cost": 649,
+        "day": 15,
+        "active": true
+      },
+      {
+        "id": 2,
+        "name": "Spotify Duo",
+        "cost": 199,
+        "day": 22,
+        "active": true
+      },
+      {
+        "id": 3,
+        "name": "GitHub Copilot Pro",
+        "cost": 850,
         "day": 5,
         "active": true
       }
     ],
-    "u_1789316748200": [],
-    "u_1789316804427": [],
-    "u_1789317060579": [
+    "u2": [
       {
-        "id": 1789317126009,
-        "name": "Gym",
-        "cost": 1500,
-        "day": 30,
+        "id": 1,
+        "name": "Adobe Creative Cloud",
+        "cost": 2399,
+        "day": 10,
+        "active": true
+      },
+      {
+        "id": 2,
+        "name": "Fitpass Gym Membership",
+        "cost": 1499,
+        "day": 1,
         "active": true
       }
-    ]
+    ],
+    "u3": []
   }
 }
