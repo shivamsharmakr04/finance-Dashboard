@@ -1,6 +1,4 @@
-/* ═════════════════════════════════════════════════════════════════════
-   FINOVA PRO - REAL-TIME EXPRESS BACKEND & AI PREDICTIONS API
-   ═════════════════════════════════════════════════════════════════════ */
+require('dotenv').config();
 
 const http = require('http');
 const express = require('express');
@@ -10,11 +8,12 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 
 const { readDB, writeDB } = require('../database/db');
+const { connectMongoDB } = require('../database/mongo');
 const { initRealtimeServer, broadcastEvent } = require('./realtime');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
-const JWT_SECRET = 'finova_pro_jwt_secret_key_2026';
+const JWT_SECRET = process.env.JWT_SECRET || 'finova_pro_jwt_secret_key_2026';
 const PUBLIC_DIR = path.join(__dirname, '..');
 
 app.use(cors());
@@ -471,8 +470,9 @@ server.on('error', (err) => {
 
 initRealtimeServer(server);
 
-server.listen(PORT, () => {
-  console.log(`\n🚀 Finova Pro Real-Time Backend API & WebSocket Engine running on http://localhost:${PORT}\n`);
+server.listen(PORT, async () => {
+  console.log(`\n🚀 Finova Pro Real-Time Backend API & WebSocket Engine running on port ${PORT}`);
+  await connectMongoDB();
 });
 
 module.exports = { app, server };
