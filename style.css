@@ -1313,16 +1313,35 @@ body {
   100% { box-shadow: 0 0 25px var(--primary-glow); }
 }
 
-/* ── Responsive Breakpoints ── */
-@media (max-width: 1024px) {
-  .grid-4 { grid-template-columns: repeat(2, 1fr); }
-  .grid-3 { grid-template-columns: repeat(2, 1fr); }
-  .grid-2-1 { grid-template-columns: 1fr; }
+/* ═════════════════════════════════════════════════════════════════════
+   FINOVA PRO - MASTER RESPONSIVE ENGINE & MULTI-DEVICE BREAKPOINTS
+   ═════════════════════════════════════════════════════════════════════ */
+
+/* ── 💻 1. Large Laptops & Desktops (1025px - 1280px) ── */
+@media (max-width: 1280px) {
+  .sidebar {
+    width: 240px;
+  }
+  .main-wrapper {
+    margin-left: 240px;
+  }
+  .grid-4 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .grid-3 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .content-body {
+    padding: 24px 20px;
+  }
 }
 
-@media (max-width: 768px) {
+/* ── 📱 2. Tablets & Small Laptops (769px - 1024px) ── */
+@media (max-width: 1024px) {
   .sidebar {
+    width: 260px;
     transform: translateX(-100%);
+    box-shadow: 0 0 40px rgba(0, 0, 0, 0.5);
   }
   .sidebar.open {
     transform: translateX(0);
@@ -1331,19 +1350,166 @@ body {
     margin-left: 0;
   }
   .hamburger-btn {
-    display: block;
+    display: flex;
   }
+  .grid-4 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .grid-3 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .grid-2-1 {
+    grid-template-columns: 1fr;
+  }
+  .topbar {
+    padding: 0 20px;
+  }
+}
+
+/* ── 📱 3. Large Mobiles & Tablets Portrait (577px - 768px) ── */
+@media (max-width: 768px) {
   .grid-4, .grid-3, .grid-2 {
     grid-template-columns: 1fr;
   }
   .content-body {
-    padding: 16px;
+    padding: 18px 14px;
   }
   .topbar {
-    padding: 0 16px;
+    padding: 10px 14px;
+    height: auto;
+    min-height: 64px;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .topbar-actions {
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .welcome-banner {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 20px;
+  }
+  .welcome-banner .btn {
+    width: 100%;
+  }
+  .modal-container {
+    width: 94vw;
+    max-width: 520px;
+    padding: 24px 18px;
+    margin: 12px;
+    max-height: 90vh;
+    overflow-y: auto;
   }
   .form-row {
     grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  .table-controls {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+  .search-box {
+    width: 100%;
+    min-width: 0;
+  }
+  .filter-group {
+    width: 100%;
+    justify-content: space-between;
+  }
+  .filter-group .form-select {
+    flex: 1;
+    min-width: 130px;
+  }
+  .ai-advisor-card {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+  }
+  .pagination-wrap {
+    flex-direction: column;
+    gap: 12px;
+    align-items: center;
+    text-align: center;
+  }
+}
+
+/* ── 📱 4. Compact Mobiles (401px - 576px) ── */
+@media (max-width: 576px) {
+  .login-card {
+    padding: 26px 18px;
+    max-width: 96vw;
+  }
+  .login-title {
+    font-size: 20px;
+  }
+  .action-pill span:not(#currencySelector) {
+    display: none;
+  }
+  .action-pill {
+    padding: 4px 8px;
+  }
+  .badge-user, .badge-admin {
+    font-size: 10px;
+    padding: 2px 6px;
+  }
+  .topbar-actions .btn-primary {
+    padding: 8px 12px;
+    font-size: 12px;
+  }
+  .stat-card {
+    padding: 16px;
+  }
+  .stat-value {
+    font-size: 22px;
+  }
+  .demo-buttons-grid {
+    grid-template-columns: 1fr;
+  }
+  .toast-container {
+    left: 14px;
+    right: 14px;
+    bottom: 14px;
+  }
+  .toast {
+    padding: 12px 16px;
+    font-size: 12px;
+  }
+}
+
+/* ── 📱 5. Ultra-Small Screens & Foldables (< 400px) ── */
+@media (max-width: 400px) {
+  .backend-status-pill .status-text {
+    display: none;
+  }
+  .backend-status-pill {
+    padding: 6px 10px;
+  }
+  .topbar-left .page-title {
+    font-size: 16px;
+    max-width: 110px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .login-logo {
+    width: 48px;
+    height: 48px;
+  }
+  .auth-tab {
+    font-size: 11px;
+    padding: 6px 4px;
+  }
+  .data-table th, .data-table td {
+    padding: 10px 8px;
+    font-size: 11px;
+  }
+  .icon-btn {
+    width: 36px;
+    height: 36px;
+    font-size: 14px;
   }
 }
 
