@@ -38,75 +38,73 @@
     <form id="formSignIn" onsubmit="handleLogin(event)">
       <div class="form-group">
         <label class="form-label">Email Address</label>
-        <input type="email" class="form-input" id="loginEmail" placeholder="e.g. alex@finova.io" style="width:100%;" required>
+        <div class="input-with-icon">
+          <span class="input-icon">✉️</span>
+          <input type="email" class="form-input" id="loginEmail" placeholder="Enter your email address" required>
+        </div>
       </div>
       <div class="form-group">
         <label class="form-label">Password</label>
-        <input type="password" class="form-input" id="loginPass" placeholder="••••••••" style="width:100%;" required>
+        <div class="input-with-icon">
+          <span class="input-icon">🔒</span>
+          <input type="password" class="form-input" id="loginPass" placeholder="Enter your password" required>
+          <button type="button" class="password-toggle-btn" onclick="togglePasswordVisibility('loginPass', 'toggleLoginPassIcon')" title="Toggle password visibility">
+            <span id="toggleLoginPassIcon">👁️</span>
+          </button>
+        </div>
       </div>
-      <button type="submit" class="btn btn-primary" style="width:100%; margin-top:8px;">Sign In to Dashboard</button>
+      <button type="submit" class="btn btn-primary btn-block">Sign In to Dashboard ➔</button>
     </form>
 
     <!-- Sign Up Form (Hidden by default) -->
     <form id="formSignUp" onsubmit="handleRegister(event)" style="display:none;">
       <div class="form-group">
         <label class="form-label">Full Name</label>
-        <input type="text" class="form-input" id="regName" placeholder="e.g. Alex Kumar" style="width:100%;" required>
+        <div class="input-with-icon">
+          <span class="input-icon">👤</span>
+          <input type="text" class="form-input" id="regName" placeholder="Enter your full name" required>
+        </div>
       </div>
       <div class="form-group">
         <label class="form-label">Email Address</label>
-        <input type="email" class="form-input" id="regEmail" placeholder="alex@finova.io" style="width:100%;" required>
+        <div class="input-with-icon">
+          <span class="input-icon">✉️</span>
+          <input type="email" class="form-input" id="regEmail" placeholder="Enter your email address" required>
+        </div>
       </div>
       <div class="form-group">
         <label class="form-label">Account Role</label>
-        <select class="form-select" id="regRole" style="width:100%;">
-          <option value="user">Standard User (Personal Workspace)</option>
-          <option value="admin">System Admin (Full System Control)</option>
-        </select>
+        <div class="input-with-icon">
+          <span class="input-icon">🔰</span>
+          <select class="form-select" id="regRole" style="width:100%;">
+            <option value="user">Standard User</option>
+            <option value="admin">Administrator</option>
+          </select>
+        </div>
       </div>
       <div class="form-group">
         <label class="form-label">Password</label>
-        <input type="password" class="form-input" id="regPass" placeholder="••••••••" style="width:100%;" required>
+        <div class="input-with-icon">
+          <span class="input-icon">🔒</span>
+          <input type="password" class="form-input" id="regPass" placeholder="Create a password (min 6 characters)" required>
+          <button type="button" class="password-toggle-btn" onclick="togglePasswordVisibility('regPass', 'toggleRegPassIcon')" title="Toggle password visibility">
+            <span id="toggleRegPassIcon">👁️</span>
+          </button>
+        </div>
       </div>
-      <button type="submit" class="btn btn-primary" style="width:100%; margin-top:8px;">Register Account</button>
+      <button type="submit" class="btn btn-primary btn-block">Create Account ➔</button>
     </form>
 
-    <!-- Quick Demo Logins -->
-    <div style="margin-top:24px; border-top:1px solid var(--border); padding-top:16px;">
-      <div style="font-size:11px; font-weight:700; color:var(--text-muted); text-transform:uppercase; margin-bottom:10px;">⚡ Quick Demo Accounts</div>
-      <div class="demo-account-list">
-        <div class="demo-account-item" onclick="demoLogin('u1')">
-          <div style="display:flex; align-items:center; gap:10px;">
-            <div class="user-avatar" style="width:30px; height:30px; font-size:11px;">AK</div>
-            <div>
-              <div style="font-weight:700; font-size:12px;">Alex Kumar</div>
-              <div style="font-size:10px; color:var(--text-muted);">Standard User</div>
-            </div>
-          </div>
-          <span class="badge-user">User</span>
-        </div>
-
-        <div class="demo-account-item" onclick="demoLogin('u2')">
-          <div style="display:flex; align-items:center; gap:10px;">
-            <div class="user-avatar" style="width:30px; height:30px; font-size:11px; background:linear-gradient(135deg, var(--secondary), var(--purple));">SC</div>
-            <div>
-              <div style="font-weight:700; font-size:12px;">Sarah Chen</div>
-              <div style="font-size:10px; color:var(--text-muted);">Standard User</div>
-            </div>
-          </div>
-          <span class="badge-user">User</span>
-        </div>
-
-        <div class="demo-account-item" onclick="demoLogin('u3')">
-          <div style="display:flex; align-items:center; gap:10px;">
-            <div class="user-avatar" style="width:30px; height:30px; font-size:11px; background:linear-gradient(135deg, var(--amber), #f97316);">AD</div>
-            <div>
-              <div style="font-weight:700; font-size:12px;">Admin Master</div>
-              <div style="font-size:10px; color:var(--text-muted);">System Oversight & Control</div>
-            </div>
-          </div>
-          <span class="badge-admin">Admin</span>
-        </div>
+    <!-- Quick Interactive Demo Access -->
+    <div class="demo-access-container">
+      <div class="demo-divider"><span>or test with instant demo</span></div>
+      <div class="demo-buttons-grid">
+        <button type="button" class="demo-quick-btn" onclick="demoLogin('u1')">
+          <span>⚡</span> User Mode
+        </button>
+        <button type="button" class="demo-quick-btn admin" onclick="demoLogin('u3')">
+          <span>👑</span> Admin Mode
+        </button>
       </div>
     </div>
   </div>

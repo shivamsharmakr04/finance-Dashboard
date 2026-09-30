@@ -306,6 +306,20 @@ function handleLogout() {
   showToast('Logged out of workspace.', 'success');
 }
 
+function togglePasswordVisibility(inputId, iconId) {
+  const input = document.getElementById(inputId);
+  const icon = document.getElementById(iconId);
+  if (input && icon) {
+    if (input.type === 'password') {
+      input.type = 'text';
+      icon.textContent = '🙈';
+    } else {
+      input.type = 'password';
+      icon.textContent = '👁️';
+    }
+  }
+}
+
 // ── Real-Time Workspace Data Sync ──
 async function loadUserData() {
   try {

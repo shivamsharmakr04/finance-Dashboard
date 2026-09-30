@@ -23,6 +23,14 @@
       "role": "admin",
       "avatar": "AD",
       "password": "/yV5bvKwSK0YHgfDQv3J0.vP7jy"
+    },
+    {
+      "id": "u_1790786907691",
+      "name": "user",
+      "email": "user1@gmail.com",
+      "role": "user",
+      "avatar": "U",
+      "password": "$2a$10$W1vkA2q0wjIfggXisDnWPulBG64FKEInVRyqsRcfl0QOf1sdOZLqG"
     }
   ],
   "transactions": {
@@ -86,7 +94,8 @@
         "date": "2026-09-13"
       }
     ],
-    "u3": []
+    "u3": [],
+    "u_1790786907691": []
   },
   "goals": {
     "u1": [
@@ -114,7 +123,8 @@
         "icon": "🚗"
       }
     ],
-    "u3": []
+    "u3": [],
+    "u_1790786907691": []
   },
   "budgets": {
     "u1": {
@@ -127,6 +137,13 @@
     "u2": {
       "food": 18000,
       "shopping": 15000
+    },
+    "u_1790786907691": {
+      "food": 12000,
+      "shopping": 10000,
+      "transport": 6000,
+      "utilities": 5000,
+      "entertainment": 4000
     }
   },
   "subscriptions": {
@@ -169,6 +186,7 @@
         "active": true
       }
     ],
-    "u3": []
+    "u3": [],
+    "u_1790786907691": []
   }
 }
